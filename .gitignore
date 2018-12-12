@@ -1,0 +1,8 @@
+node_modules
+tmp/**
+build/**
+node_modules/**
+contracts/**
+.idea
+.idea/
+package-lock.jsonn
