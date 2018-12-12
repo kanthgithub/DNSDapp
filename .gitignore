@@ -4,4 +4,4 @@ build/**
 node_modules/**
 .idea
 .idea/
-package-lock.jsonn
+package-lock.json
