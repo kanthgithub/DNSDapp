@@ -269,5 +269,13 @@ contract DNSDappMaster is DNSUtilLibrary {
         return !isAValidDNSName(_dnsName);
     }
 
+    function isAValidDNSNameString(string _dnsName) public view returns (bool _isValid) {
+
+        //get bytes32 representation of the _dnsName
+        bytes32 dnsNameLookupValue = toBytes32(_dnsName);
+
+       return isAValidDNSName(dnsNameLookupValue);
+    }
+
 
 }
