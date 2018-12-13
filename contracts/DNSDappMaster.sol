@@ -208,7 +208,10 @@ contract DNSDappMaster is DNSUtilLibrary {
     }
 
 
-
+    /**
+    * reserve a new DNSName
+    * Name should be non-existent
+    */
     function reserveDNSName(string _dnsName) public payable returns(bool isSuccessful)
     {
         //get bytes32 representation of the _dnsName
