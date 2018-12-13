@@ -15,16 +15,16 @@ contract('DNSDappMaster', function (accounts) {
     let nameOwner = accounts[1]
     return DNSDappMaster.deployed().then(function (instance) {
       return instance.reserveDNSName('lakshmikanth.p', { from: nameOwner, value: web3.toWei(1, 'ether') })
-        .then(function (result) {
-          assert.isOk(result.receipt)
+        .then(function (transactionResult) {
+          assert.isOk(transactionResult.receipt)
           return instance.isAValidDNSNameString.call('lakshmikanth.p').then(function (reservationEvent) {
             assert.equal(reservationEvent, true, 'lakshmikanth.p is now reserved')
           })
         }).then(function () {
           return instance.reserveDNSName('lakshmikanth.p', { from: nameOwner, value: web3.toWei(1, 'ether') })
-            .then(function (result) {
-              assert.isNotOk(result.receipt)
-            }).catch(function (ex) {
+            .then(function (transactionResult) {
+              assert.isNotOk(transactionResult.receipt)
+            }).catch(function (exception) {
               console.log('asserted that system cannot reserve an existing DNSName')
             })
         })
@@ -35,8 +35,8 @@ contract('DNSDappMaster', function (accounts) {
     let nameOwner = accounts[1]
     return DNSDappMaster.deployed().then(function (instance) {
       return instance.reserveDNSName('lakshmikanth.pabbisetti', { from: nameOwner, value: web3.toWei(1, 'ether') })
-        .then(function (result) {
-          assert.isOk(result.receipt)
+        .then(function (transactionResult) {
+          assert.isOk(transactionResult.receipt)
           return instance.isAValidDNSNameString.call('lakshmikanth.pabbisetti').then(function (reservationEvent) {
             assert.equal(reservationEvent, true, 'lakshmikanth.pabbisetti is now reserved')
           })
@@ -49,16 +49,16 @@ contract('DNSDappMaster', function (accounts) {
     let etherSender = accounts[2]
     return DNSDappMaster.deployed().then(function (instance) {
       return instance.reserveDNSName('lakshmikanth', { from: nameOwner, value: web3.toWei(1, 'ether') })
-        .then(function (result) {
-          assert.isOk(result.receipt)
+        .then(function (transactionResult) {
+          assert.isOk(transactionResult.receipt)
           return instance.isAValidDNSNameString.call('lakshmikanth').then(function (reservationEvent) {
             assert.equal(reservationEvent, true, 'lakshmikanth is now reserved')
           })
         })
         .then(function () {
           return instance.transferEtherByDNSName('lakshmikanth', { from: etherSender, value: web3.toWei(0.1, 'ether') })
-            .then(function (result) {
-              assert.isOk(result.receipt)
+            .then(function (transactionResult) {
+              assert.isOk(transactionResult.receipt)
             })
         })
     })
@@ -68,9 +68,9 @@ contract('DNSDappMaster', function (accounts) {
     let etherSender = accounts[2]
     return DNSDappMaster.deployed().then(function (instance) {
       return instance.transferEtherByDNSName('alien', { from: etherSender, value: web3.toWei(0.1, 'ether') })
-        .then(function (result) {
-          assert.isNotOk(result.receipt)
-        }).catch(function (ex) {
+        .then(function (transactionResult) {
+          assert.isNotOk(transactionResult.receipt)
+        }).catch(function (exception) {
           console.log('asserted that system cannot Transfer funds to non-existing DNSName')
         })
     })
@@ -83,14 +83,14 @@ contract('DNSDappMaster', function (accounts) {
 
     return DNSDappMaster.deployed().then(function (instance) {
       return instance.reserveDNSName(dnsName, { from: nameOwner, value: web3.toWei(0.5, 'ether') })
-        .then(function (result) {
-          return instance.getOwnerName.call(dnsName).then(function (nameOwnerResult) {
-            assert.equal(nameOwnerResult, nameOwner, 'able to lookup DNSName Owner as Tars');
+        .then(function (transactionResult) {
+          return instance.getOwnerName.call(dnsName).then(function (nameOwnertransactionResult) {
+            assert.equal(nameOwnertransactionResult, nameOwner, 'able to lookup DNSName Owner as Tars');
           })
             .then(function () {
               return instance.bidForDNSName('Tars', { from: bidderAddress, value: web3.toWei(0.7, 'ether') })
-                .then(function (bidResult) {
-                  assert.isOk(bidResult.receipt)
+                .then(function (bidtransactionResult) {
+                  assert.isOk(bidtransactionResult.receipt)
                 })
             })
         })
@@ -103,24 +103,58 @@ contract('DNSDappMaster', function (accounts) {
 
     return DNSDappMaster.deployed().then(function (instance) {
       return instance.bidForDNSName(dnsName, { from: bidderAddress, value: web3.toWei(0.4, 'ether') })
-        .then(function (bidResult) {
-          assert.isNotOk(bidResult.receipt)
-        }).catch(function (ex) {
+        .then(function (bidtransactionResult) {
+          assert.isNotOk(bidtransactionResult.receipt)
+        }).catch(function (exception) {
           console.log('asserted that user cannot bid on a non-existing DNSName')
         })
     })
   })
 
-  it('assert that user cannot do zero-bidding on an existent Name', function () {
+  it('assert that user cannot do zero-bidding on an existent DNSName', function () {
     let bidderAddress = accounts[3]
     let dnsName = 'Tars'
 
     return DNSDappMaster.deployed().then(function (instance) {
       return instance.bidForDNSName(dnsName, { from: bidderAddress, value: web3.toWei(0, 'ether') })
-        .then(function (bidResult) {
-          assert.isNotOk(bidResult.receipt)
-        }).catch(function (ex) {
+        .then(function (bidtransactionResult) {
+          assert.isNotOk(bidtransactionResult.receipt)
+        }).catch(function (exception) {
           console.log('asserted that user cannot do zero-bidding on a non-existing DNSName')
+        })
+    })
+  })
+
+  it('assert scenario of multiple users bidding on a DNSName', function () {
+    let dnsName = 'Murphy'
+    let dnsNameOwner = accounts[2]
+    let firstBidder = accounts[3]
+    let secondBidder = accounts[4]
+    let thirdBidder = accounts[5]
+    return DNSDappMaster.deployed().then(function (instance) {
+      return instance.reserveDNSName(dnsName, { from: dnsNameOwner, value: web3.toWei(0.4, 'ether') })
+        .then(function (transactionResult) {
+          return instance.getOwnerName.call(dnsName).then(function (owner) {
+            assert.equal(owner, dnsNameOwner, 'Murphy is now reserved')
+          })
+            .then(function () {
+              return instance.bidForDNSName(dnsName, { from: firstBidder, value: web3.toWei(0.5, 'ether') })
+                .then(function (transactionResult) {
+                  assert.isOk(transactionResult.receipt)
+                })
+            }).then(function () {
+              return instance.bidForDNSName(dnsName, { from: secondBidder, value: web3.toWei(0.45, 'ether') })
+                .then(function (transactionResult) {
+                  assert.isNotOk(transactionResult.receipt)
+                }).catch(function (exception) {
+                  console.log('reject currentBidder as currentBidPrice is lesser than indicativePrice' + exception)
+                })
+            }).then(function () {
+              return instance.bidForDNSName(dnsName, { from: thirdBidder, value: web3.toWei(0.75, 'ether') })
+                .then(function (transactionResult) {
+                  assert.isOk(transactionResult.receipt)
+                })
+            })
         })
     })
   })
