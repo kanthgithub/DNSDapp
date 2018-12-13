@@ -2,7 +2,7 @@ pragma solidity ^0.4.24;
 
 import './DNSBid.sol';
 import "./DNSStates.sol";
-import "./DNSLibrary.sol";
+import "./DNSDataModel.sol";
 
 //contract to store the registered bids as well as winning bids
 //also maintains the entries/audit of all Bids
@@ -92,5 +92,52 @@ contract BidRegistry {
         //mark the completion of recording bidState
         return true;
     }
+
+    /**
+     * get bid-Amount by BidderAddress
+     * can be performed only if the bidder has an active bid in the dnsBidEntry
+     */
+    function getHighestBidByBidderAddress(address _bidderAddress) public returns(uint highestBidValue){
+
+        require(dnsBidMap[_bidderAddress].active);
+
+        //extract the best-bid made by the bidder
+        DNSBid dnsBidEntry = dnsBidMap[_bidderAddress];
+
+        //check if dnsBid is active
+        require(dnsBidEntry.active() == true);
+
+        return dnsBidEntry.amount();
+    }
+
+    /**
+     * get total bid-Amount by BidderAddress
+     * can be performed only if the bidder exists in the dnsBalanceMap
+     */
+    function getTotalFundsOfABidder(address _bidderAddress) public returns(uint bidderFunds){
+
+        require(dnsBalanceMap[_bidderAddress].exists);
+
+        return dnsBalanceMap[_sender];
+    }
+
+
+    function deductFundsFromWinningBidder(address _bidderAddress, uint _winningBidAmount) public returns (boolean isSuccessful){
+
+        require(dnsBalanceMap[_bidderAddress].exists);
+
+        dnsBalanceMap[_bidderAddress] -= _winningBidAmount;
+
+        return true;
+    }
+
+
+
+
+
+
+
+
+
 
 }
