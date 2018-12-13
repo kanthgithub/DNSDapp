@@ -25,6 +25,31 @@
 4. web3
 5. eslint
 
+# DataModel:
+
+- Bid DataModel:
+
+
+- Bid States:
+
+
+- Bid Registry:
+
+
+
+
+# Solidity contract diagram:
+
+
+
+
+
+# Sequence Diagram
+
+
+
+
+
 # Tests:
 
 1. Javascript Tests
