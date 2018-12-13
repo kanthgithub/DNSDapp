@@ -36,7 +36,9 @@ contract DNSDappMaster is DNSUtilLibrary {
 
     event BidFinalizationEvent(string _dnsName, address sender, address bestBidderAddress, uint bestBidPrice);
 
-
+    /**
+    * verify for the validity of the DNSNameString
+    */
     function verifyName(string _dnsName) public view returns(bool _exists)
     {
         bytes32 dnsLookupName = toBytes32(_dnsName);
@@ -44,8 +46,23 @@ contract DNSDappMaster is DNSUtilLibrary {
         return hasDNSOwner(dnsLookupName);
     }
 
+    /**
+    * verify if the DNSName has Owner
+    */
     function hasDNSOwner(bytes32 _dnsName) internal view returns (bool _nameExists) {
         return dnsNameDataModelMap[_dnsName].active;
+    }
+
+    /**
+    * lookup for the owner of the DNSName
+    */
+    function getOwnerName(string _dnsName) public view returns(address) {
+
+        bytes32  dnsLookupName = toBytes32(_dnsName);
+
+        require(hasDNSOwner(dnsLookupName));
+
+        return dnsNameDataModelMap[dnsLookupName].nameOwner;
     }
 
 
