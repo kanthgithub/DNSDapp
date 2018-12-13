@@ -10,10 +10,10 @@ contract DNSBid {
     uint public amount;
     address public owner ;
 
-    function Bid(uint _amount, address _owner) public {
+    constructor(uint _amount, address _owner) public {
         amount = _amount;
         owner = _owner;
-        state = Library.BidStates.BID_OPEN;
+        bidState = DNSStates.BidStates.BID_OPEN;
         active = true;
     }
 
@@ -25,7 +25,7 @@ contract DNSBid {
         bidState = _bidState;
     }
 
-    function setBidActive(bool _active) public {
+    function setActive(bool _active) public {
         active = _active;
     }
 }

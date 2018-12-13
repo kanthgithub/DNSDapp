@@ -1,7 +1,7 @@
 pragma solidity ^0.4.24;
 
 
-library DNSUtilLibrary {
+contract DNSUtilLibrary {
 
     // convert string to Bytes32
     function toBytes32(string memory source) public pure returns (bytes32)

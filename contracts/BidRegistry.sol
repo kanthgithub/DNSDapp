@@ -27,7 +27,7 @@ contract BidRegistry {
     address  public bestBidder;
 
     //constructor with indicativePrice from the bidder
-    function BidRegistry(uint _indicativePrice) public {
+    constructor(uint _indicativePrice) public {
         indicativePrice = _indicativePrice;
         dnsBidState = DNSStates.BidRegistryState.ACTIVE;
     }
@@ -81,10 +81,10 @@ contract BidRegistry {
         require(dnsBidEntry.active() == true);
 
         //validate if the bidState is being updated by the bidder itself
-        require(dnsBidEntry.owner() == _bidder);
+        require(dnsBidEntry.owner() == _bidderAddress);
 
         //set ther bidState of the bidEntry with input argument (must be an enum)
-        dnsBidEntry.setState(_bidState);
+        dnsBidEntry.setBidState(_bidState);
 
         //set the active Indicator to bidEntry
         dnsBidEntry.setActive(_active);
@@ -97,9 +97,9 @@ contract BidRegistry {
      * get bid-Amount by BidderAddress
      * can be performed only if the bidder has an active bid in the dnsBidEntry
      */
-    function getHighestBidByBidderAddress(address _bidderAddress) public returns(uint highestBidValue){
+    function getHighestBidByBidderAddress(address _bidderAddress) public view returns(uint highestBidValue){
 
-        require(dnsBidMap[_bidderAddress].active);
+        require(dnsBidMap[_bidderAddress].active() == true);
 
         //extract the best-bid made by the bidder
         DNSBid dnsBidEntry = dnsBidMap[_bidderAddress];
@@ -110,21 +110,19 @@ contract BidRegistry {
         return dnsBidEntry.amount();
     }
 
+
+
     /**
      * get total bid-Amount by BidderAddress
      * can be performed only if the bidder exists in the dnsBalanceMap
      */
-    function getTotalFundsOfABidder(address _bidderAddress) public returns(uint bidderFunds){
+    function getTotalFundsOfABidder(address _bidderAddress) public view returns(uint bidderFunds){
 
-        require(dnsBalanceMap[_bidderAddress].exists);
-
-        return dnsBalanceMap[_sender];
+        return dnsBalanceMap[_bidderAddress];
     }
 
 
-    function deductFundsFromWinningBidder(address _bidderAddress, uint _winningBidAmount) public returns (boolean isSuccessful){
-
-        require(dnsBalanceMap[_bidderAddress].exists);
+    function deductFundsFromWinningBidder(address _bidderAddress, uint _winningBidAmount) public returns (bool isSuccessful){
 
         dnsBalanceMap[_bidderAddress] -= _winningBidAmount;
 
