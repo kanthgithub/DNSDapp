@@ -158,4 +158,49 @@ contract('DNSDappMaster', function (accounts) {
         })
     })
   })
+
+  it('assert the bid-Finalizing process', function () {
+    let dnsName = 'Tesseract'
+    let dnsNameOwner = accounts[2]
+    let firstBidder = accounts[3]
+    let secondBidder = accounts[4]
+    let thirdBidder = accounts[5]
+    return DNSDappMaster.deployed().then(function (instance) {
+      return instance.reserveDNSName(dnsName, { from: dnsNameOwner, value: web3.toWei(0.4, 'ether') })
+        .then(function (transactionResult) {
+          return instance.getOwnerName.call(dnsName).then(function (owner) {
+            assert.equal(owner, dnsNameOwner, 'Tesseract is now reserved')
+          })
+            .then(function () {
+              return instance.bidForDNSName(dnsName, { from: firstBidder, value: web3.toWei(0.5, 'ether') })
+                .then(function (transactionResult) {
+                  assert.isOk(transactionResult.receipt)
+                })
+            }).then(function () {
+              return instance.bidForDNSName(dnsName, { from: secondBidder, value: web3.toWei(0.45, 'ether') })
+                .then(function (transactionResult) {
+                  assert.isNotOk(transactionResult.receipt)
+                }).catch(function (exception) {
+                  console.log('reject currentBidder as currentBidPrice is lesser than indicativePrice' + exception)
+                })
+            }).then(function () {
+              return instance.bidForDNSName(dnsName, { from: thirdBidder, value: web3.toWei(0.75, 'ether') })
+                .then(function (transactionResult) {
+                  assert.isOk(transactionResult.receipt)
+                })
+            }).then(function () {
+              return instance.finalizeBiddingProcess(dnsName, { from: dnsNameOwner })
+                .then(function (result) {
+                  assert.isOk(result.receipt);
+                })
+            })
+            .then(function () {
+              return instance.getOwnerName.call(dnsName).then(function (winningBidder) {
+                assert.equal(winningBidder, thirdBidder, 'thirdBidder is the new owner of Tesseract')
+              })
+            })
+        })
+    })
+  })
+
 })
