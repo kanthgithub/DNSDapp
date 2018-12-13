@@ -29,13 +29,59 @@
 
 - Bid DataModel:
 
+  - DataModel to store Bid Details for a given DNSName
+  - bidState in the model represents different states bid can stay in the workflow
+  - amount is the bidPrice made by Bidder
+  - owner is the address of the Bidder
+
+```solidity
+contract DNSBid {
+
+    using DNSStates for DNSStates.BidStates;
+    DNSStates.BidStates public bidState;
+    bool public active;
+    uint public amount;
+    address public owner ;
+    }
+```
+
 
 - Bid States:
+
+  - enum to hold the states that bid can go through in a Bid-Life cycle
+
+```solidity
+enum BidStates {
+        BID_VOID,
+        BID_OPEN,
+        BID_ACCEPTED,
+        BID_OVERBOARD,
+        BID_WITHDRAWN
+    }
+```
 
 
 - Bid Registry:
 
+ - A Container/Registry to hold all details/bids made for a given DNSName
+ - Contains the storage for mappings:
+ 
+    - dnsBidMap : map to store all bids and respective bidder-addresses
+    - dnsBalanceMap : map to store the bidder-Address as key and bid-Price as Value
+    - bestBidder : Address of the Bidder whose bid was highest (indicative price)
+    
+ ```solidity
 
+    //map to store all bids and respective bidder-address
+    mapping(address => DNSBid) public dnsBidMap;
+
+    // map Bidder to his/her value (address as key and ether as value)
+    mapping (address => uint) public dnsBalanceMap;
+
+    // winning bidder's address
+    address  public bestBidder;
+
+```
 
 
 # Solidity contract diagram:
