@@ -9,7 +9,7 @@
     
 # Use Cases:
   
-1.  Checking the avaiability for a name
+1.  Checking the availability for a name
 2.	Reserve a name if available, by sending a tx with amount of ether
 3.	Release name by making it available (can be released only by their owners)
 5.	Bid on names already taken (bids must be > original price)
@@ -19,27 +19,29 @@
 
 # Technology Stack:
 
-1. 
-2.
-3.
-4.
-5.
-6.
-7.
+1. ethereum (ganache-cli)
+2. truffle
+3. nodeJS
+4. web3
+5. eslint
 
 # Tests:
 
 1. Javascript Tests
-2. Solidity Tests
+2. Solidity Tests (In-Progress)
 
 # Deployment:
 
-
-
+- checkout source code
+- navigate to source directory
+- run npm install
+- run truffle compile
+- run truffle migrate
+- run truffle test
 
 # Testnet Verification:
 
-
+Rinkeby Testnet (Infura) - Inprogress
 
 # Improvements / TODO:
 
