@@ -7,7 +7,7 @@ module.exports = {
       host: '127.0.0.1',
       port: 8545,
       network_id: '*',
-      from: '0xc09ce78fcbf772d5cfa1b88fbbf872279debf0ef',
+      from: '0x917f740e77ac746938a58ad6b5248692174112fe',
       gas: 4500000
     }
   }
