@@ -87,13 +87,6 @@ enum BidStates {
 
 
 
-
-# Sequence Diagram
-
-
-
-
-
 # Tests:
 
 1. Javascript Tests
