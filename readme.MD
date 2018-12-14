@@ -99,6 +99,44 @@ enum BidStates {
 1. Javascript Tests
 2. Solidity Tests (In-Progress)
 
+```js
+
+lakshmikanth-MacBook-Pro:DNSDapp lakshmikanth$ truffle test
+Using network 'test'.
+
+Compiling ./contracts/BidRegistry.sol...
+Compiling ./contracts/DNSBid.sol...
+Compiling ./contracts/DNSDappMaster.sol...
+Compiling ./contracts/DNSDataModel.sol...
+Compiling ./contracts/DNSStates.sol...
+Compiling ./contracts/DNSUtilLibrary.sol...
+
+
+  Contract: DNSDappMaster
+    ✓ assert that non-existent name check returns false (50ms)
+asserted that system cannot reserve an existing DNSName
+    ✓ assert that system cannot Reserve on an existing and active DNSName (187ms)
+    ✓ assert that system can Reserve a new DNSName (101ms)
+    ✓ assert that system can Reserve a new DNSName and Transfer funds by using DNSName (117ms)
+asserted that system cannot Transfer funds to non-existing DNSName
+    ✓ assert that system cannot Transfer funds to non-existing DNSName
+    ✓ assert that user can bid on a Name (132ms)
+asserted that user cannot bid on a non-existing DNSName
+    ✓ assert that user cannot bid on a non-existent Name
+asserted that user cannot do zero-bidding on a non-existing DNSName
+    ✓ assert that user cannot do zero-bidding on an existent DNSName
+reject currentBidder as currentBidPrice is lesser than indicativePriceError: VM Exception while processing transaction: revert
+    ✓ assert scenario of multiple users bidding on a DNSName (204ms)
+reject currentBidder as currentBidPrice is lesser than indicativePriceError: VM Exception while processing transaction: revert
+    ✓ assert the bid-Finalizing process (290ms)
+    ✓ assert that dnsNameOwner can release ownership (99ms)
+failed-attempt of release-ownership by fakeOwner: Kaiju
+    ✓ assert that dnsNameOwner cannot be released by non-owning entity (63ms)
+
+
+  12 passing (1s)
+```
+
 # Deployment:
 
 - checkout source code
