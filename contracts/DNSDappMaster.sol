@@ -36,6 +36,9 @@ contract DNSDappMaster is DNSUtilLibrary {
 
     event BidFinalizationEvent(string _dnsName, address sender, address bestBidderAddress, uint bestBidPrice);
 
+    event DNSNameOwnershipReleaseEvent(string _dnsName);
+
+
     /**
     * verify for the validity of the DNSNameString
     */
@@ -264,6 +267,34 @@ contract DNSDappMaster is DNSUtilLibrary {
         }
 
         return isSuccessfullyReserved;
+    }
+
+    /**
+    * release a pre-owned DNSName
+    * Name should be existent and can be release by nameOwner
+    */
+    function releaseDNSNameOwnership(string _dnsName) public returns (bool _dnsNameReleasedIndicator)
+    {
+        //get bytes32 representation of the _dnsName
+        bytes32 dnsNameLookupValue = toBytes32(_dnsName);
+
+        // Name should be existent
+        require(hasDNSOwner(dnsNameLookupValue));
+
+        // can be release by nameOwner
+        require(msg.sender == dnsNameDataModelMap[dnsNameLookupValue].nameOwner);
+
+        // adjust the price to Zero (as name is being released)
+        dnsNameDataModelMap[dnsNameLookupValue].price = 0;
+
+        //deactivate DNSName so that it can be reserved
+        // this will reset the status and push the DNSName to starting-point of workflow
+        dnsNameDataModelMap[dnsNameLookupValue].active = false;
+
+        //emit DNSName release-event
+        emit DNSNameOwnershipReleaseEvent(_dnsName);
+
+        return true;
     }
 
 
