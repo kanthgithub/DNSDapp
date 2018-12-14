@@ -297,7 +297,10 @@ contract DNSDappMaster is DNSUtilLibrary {
         return true;
     }
 
-
+    /**
+    * add new dnsName to DNSDataModel
+    * will be called by reserveDNSName
+    */
     function addNewDNSEntry(bytes32 _dnsName, uint _reservationFees) private returns (bool _isSuccessful)
     {
         dnsNameDataModelMap[_dnsName].name = _dnsName;
@@ -308,7 +311,9 @@ contract DNSDappMaster is DNSUtilLibrary {
     }
 
 
-
+    /**
+    * verify if dnsNameString is valid
+    */
     function isAValidDNSName(bytes32 _dnsName) internal view returns (bool _isValid) {
 
         DNSDataModel.DNSData storage dnsData = dnsNameDataModelMap[_dnsName];
@@ -316,10 +321,16 @@ contract DNSDappMaster is DNSUtilLibrary {
         return dnsData.active;
     }
 
+    /**
+    * check if the dnsName Reservation is allowed
+    */
     function isDNSNameReservationAllowed(bytes32 _dnsName) internal view returns (bool _isValid) {
         return !isAValidDNSName(_dnsName);
     }
 
+    /**
+    * check the dnsName (byte format) for validity
+    */
     function isAValidDNSNameString(string _dnsName) public view returns (bool _isValid) {
 
         //get bytes32 representation of the _dnsName

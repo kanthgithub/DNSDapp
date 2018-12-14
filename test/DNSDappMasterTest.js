@@ -203,4 +203,43 @@ contract('DNSDappMaster', function (accounts) {
     })
   })
 
+  it('assert that dnsNameOwner can release ownership', function () {
+    let dnsName = 'Apollo'
+    let dnsNameOwner = accounts[2]
+
+    return DNSDappMaster.deployed().then(function (instance) {
+      return instance.reserveDNSName(dnsName, { from: dnsNameOwner, value: web3.toWei(0.4, 'ether') })
+        .then(function (transactionResult) {
+          return instance.getOwnerName.call(dnsName).then(function (owner) {
+            assert.equal(owner, dnsNameOwner, 'Apollo is now reserved')
+          }).then(function () {
+            return instance.releaseDNSNameOwnership.call(dnsName, { from: dnsNameOwner }).then(function (releaseOwnershipResult) {
+              assert.equal(releaseOwnershipResult, true, 'ownership released successfully')
+            })
+          })
+        })
+    })
+  })
+
+  it('assert that dnsNameOwner cannot be released by non-owning entity', function () {
+    let dnsName = 'OptimusPrime'
+    let dnsNameOwner = accounts[2]
+    let fakeOwner = 'Kaiju'
+
+    return DNSDappMaster.deployed().then(function (instance) {
+      return instance.reserveDNSName(dnsName, { from: dnsNameOwner, value: web3.toWei(0.4, 'ether') })
+        .then(function (transactionResult) {
+          return instance.getOwnerName.call(dnsName).then(function (owner) {
+            assert.equal(owner, dnsNameOwner, 'Apollo is now reserved')
+          }).then(function () {
+            return instance.releaseDNSNameOwnership.call(dnsName, { from: fakeOwner }).then(function (releaseOwnershipResult) {
+              assert.isNotOk(releaseOwnershipResult.receipt)
+            }).catch(function (exception) {
+              console.log('failed-attempt of release-ownership by fakeOwner: ' + fakeOwner)
+            })
+          })
+        })
+    })
+  })
+
 })
