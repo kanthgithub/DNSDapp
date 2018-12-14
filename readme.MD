@@ -54,9 +54,7 @@ contract DNSBid {
 enum BidStates {
         BID_VOID,
         BID_OPEN,
-        BID_ACCEPTED,
-        BID_OVERBOARD,
-        BID_WITHDRAWN
+        BID_ACCEPTED
     }
 ```
 
