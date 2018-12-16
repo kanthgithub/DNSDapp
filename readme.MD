@@ -89,6 +89,8 @@ enum BidStates {
 
 # Tests:
 
+[![Coverage Status](https://coveralls.io/repos/github/kanthgithub/DNSDapp/badge.svg?branch=master)](https://coveralls.io/github/kanthgithub/DNSDapp?branch=master)
+
 1. Javascript Tests
 2. Solidity Tests (In-Progress)
 
@@ -141,10 +143,11 @@ failed-attempt of release-ownership by fakeOwner: Kaiju
 
 # Testnet Verification:
 
-Rinkeby Testnet (Infura) - Inprogress
+Rinkeby Testnet (Infura) - In-progress
 
 # Improvements / TODO:
 
 1. UI on ReactJS
 2. End to End tests
 3. Use security mechanisms to avoid Re-entry and other DApp based attacks
+4. Assert for events emitted during reservation , new bid and bid-finalization process

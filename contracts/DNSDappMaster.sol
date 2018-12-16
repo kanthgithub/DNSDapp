@@ -30,6 +30,8 @@ contract DNSDappMaster is DNSUtilLibrary {
 
     event EtherTransferredToDNSNameEvent(string _dnsName, uint _amount);
 
+    event ReserveAttemptDNSNameEvent(string _dnsName , uint _reservationFees, address _reservedAddress);
+
     event ReserveDNSNameEvent(string _dnsName , uint _reservationFees, address _reservedAddress, bool _successfulRegistration);
 
     event BestBidRaiseEvent(address _bestBidderAddress, uint _bestBidPrice);
@@ -312,6 +314,14 @@ contract DNSDappMaster is DNSUtilLibrary {
 
 
     /**
+    * check if the dnsName Reservation is allowed
+    */
+    function isDNSNameReservationAllowed(bytes32 _dnsName) internal view returns (bool _isValid) {
+        return !isAValidDNSName(_dnsName);
+    }
+
+
+    /**
     * verify if dnsNameString is valid
     */
     function isAValidDNSName(bytes32 _dnsName) internal view returns (bool _isValid) {
@@ -319,13 +329,6 @@ contract DNSDappMaster is DNSUtilLibrary {
         DNSDataModel.DNSData storage dnsData = dnsNameDataModelMap[_dnsName];
 
         return dnsData.active;
-    }
-
-    /**
-    * check if the dnsName Reservation is allowed
-    */
-    function isDNSNameReservationAllowed(bytes32 _dnsName) internal view returns (bool _isValid) {
-        return !isAValidDNSName(_dnsName);
     }
 
     /**
