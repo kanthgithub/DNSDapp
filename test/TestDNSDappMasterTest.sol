@@ -6,13 +6,27 @@ import "../contracts/DNSDappMaster.sol";
 
 contract TestDNSDappMasterTest {
 
+    uint public initialBalance = .50 ether;
+
+    uint public MIN_RESERVATION_FEE = 0.11 ether;
+
     DNSDappMaster dnsDappMaster =  DNSDappMaster(DeployedAddresses.DNSDappMaster());
 
-    function assertForNonExistentDNSName() public  {
+    function testForNonExistentDNSName() public  {
 
-        bool doesDNSNameExist = dnsDappMaster.isAValidDNSNameString('asas');
+        bool doesDNSNameExist = dnsDappMaster.isAValidDNSNameString('alien');
 
         Assert.equal(doesDNSNameExist,false,'asserted');
     }
+
+
+    function testReserveDNSName() public  {
+
+        string memory dnsNameForReservation  = "singapura";
+
+        dnsDappMaster.reserveDNSName.value(MIN_RESERVATION_FEE)(dnsNameForReservation);
+    }
+
+
 
 }
